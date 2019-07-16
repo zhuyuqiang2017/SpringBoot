@@ -297,13 +297,19 @@ public class SpringApplication {
 		ConfigurableApplicationContext context = null;
 		Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
 		configureHeadlessProperty();
+		//获取所有实现SpringApplicationRunListener接口的bean实体，
 		SpringApplicationRunListeners listeners = getRunListeners(args);
 		listeners.starting();
 		try {
+			//zhuyuqiang：解析启动参数，将字符串数组封装为DefaultApplicationArguments对象
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+			//zhuyuqiang：准备应用环境，获取一个标准的servelet环境
 			ConfigurableEnvironment environment = prepareEnvironment(listeners, applicationArguments);
+			//zhuyuqiang： 配置是否忽略beaninfo
 			configureIgnoreBeanInfo(environment);
+			//zhuyuqiang： 获取banner
 			Banner printedBanner = printBanner(environment);
+			//zhuyuqiang： 创建应用上下文，具体的context实现类：AnnotationConfigServletWebServerApplicationContext
 			context = createApplicationContext();
 			exceptionReporters = getSpringFactoriesInstances(SpringBootExceptionReporter.class,
 					new Class[] { ConfigurableApplicationContext.class }, context);
@@ -338,12 +344,16 @@ public class SpringApplication {
 		// Create and configure the environment
 		ConfigurableEnvironment environment = getOrCreateEnvironment();
 		configureEnvironment(environment, applicationArguments.getSourceArgs());
+		//zhuyuqiang： 构建广播事件，并对外发送广播
 		listeners.environmentPrepared(environment);
 		bindToSpringApplication(environment);
+		//zhuyuqiang： 默认情况下不是自定义环境，通过deduceEnvironmentClass拿到的class为StandardServletEnvironment.class
 		if (!this.isCustomEnvironment) {
+			//zhuyuqiang： 新建一个标准的servlet环境，并将environment中的相关属性拷贝至servlet环境中
 			environment = new EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,
 					deduceEnvironmentClass());
 		}
+		//zhuyuqiang： 将原来环境中的PropertySources替换为SpringConfigurationPropertySources
 		ConfigurationPropertySources.attach(environment);
 		return environment;
 	}
@@ -468,10 +478,14 @@ public class SpringApplication {
 	 */
 	protected void configureEnvironment(ConfigurableEnvironment environment, String[] args) {
 		if (this.addConversionService) {
+			//zhuyuqiang：获取转换服务，主要进行集合间的转换和对象间的转换
 			ConversionService conversionService = ApplicationConversionService.getSharedInstance();
 			environment.setConversionService((ConfigurableConversionService) conversionService);
 		}
+		//zhuyuqiang： 在默认没有在命令行指定特殊参数时，当前方法只会添加commandLine方法所需要的配置项
 		configurePropertySources(environment, args);
+		//zhuyuqiang： 添加配置文件中所有的配置项，并根据是否有activeprofile配置项另外加载其他的配置文件
+		//zhuyuqiang： 最终，所有的配置都会被保存在AbstractEnvironment对象的activeProfiles集合中
 		configureProfiles(environment, args);
 	}
 
