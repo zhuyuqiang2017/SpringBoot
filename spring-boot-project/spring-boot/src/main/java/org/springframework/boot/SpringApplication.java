@@ -313,6 +313,7 @@ public class SpringApplication {
 			context = createApplicationContext();
 			exceptionReporters = getSpringFactoriesInstances(SpringBootExceptionReporter.class,
 					new Class[] { ConfigurableApplicationContext.class }, context);
+			//开始初始化完成相关资源解析类的对象，并完成对main class的解析
 			prepareContext(context, environment, listeners, applicationArguments, printedBanner);
 			refreshContext(context);
 			afterRefresh(context, applicationArguments);
@@ -372,7 +373,9 @@ public class SpringApplication {
 	private void prepareContext(ConfigurableApplicationContext context, ConfigurableEnvironment environment,
 			SpringApplicationRunListeners listeners, ApplicationArguments applicationArguments, Banner printedBanner) {
 		context.setEnvironment(environment);
+		//应用上下文中添加资源加载器和ConversionService服务
 		postProcessApplicationContext(context);
+		//应用上下文初始化，通过对几个继承ApplicationContextInitializer接口类的初始化来完成相关的配置工作
 		applyInitializers(context);
 		listeners.contextPrepared(context);
 		if (this.logStartupInfo) {
@@ -392,6 +395,7 @@ public class SpringApplication {
 		// Load the sources
 		Set<Object> sources = getAllSources();
 		Assert.notEmpty(sources, "Sources must not be empty");
+		//当前只加载解析了mainclass的注解，并生成mainclass对应的BeanDefinition对象并保存
 		load(context, sources.toArray(new Object[0]));
 		listeners.contextLoaded(context);
 	}
@@ -604,11 +608,14 @@ public class SpringApplication {
 	 * @param context the application context
 	 */
 	protected void postProcessApplicationContext(ConfigurableApplicationContext context) {
+		//初始化阶段，beanNameGenerator为null
 		if (this.beanNameGenerator != null) {
+			//使用当前beanNameGenerator对象替换容器中已存在的具有相同beanName的对象
 			context.getBeanFactory().registerSingleton(AnnotationConfigUtils.CONFIGURATION_BEAN_NAME_GENERATOR,
 					this.beanNameGenerator);
 		}
 		if (this.resourceLoader != null) {
+			//当前条件判断为true
 			if (context instanceof GenericApplicationContext) {
 				((GenericApplicationContext) context).setResourceLoader(this.resourceLoader);
 			}
@@ -617,6 +624,7 @@ public class SpringApplication {
 			}
 		}
 		if (this.addConversionService) {
+			//设置ConversionService
 			context.getBeanFactory().setConversionService(ApplicationConversionService.getSharedInstance());
 		}
 	}
@@ -688,7 +696,9 @@ public class SpringApplication {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Loading source " + StringUtils.arrayToCommaDelimitedString(sources));
 		}
+		//获取类定义加载器
 		BeanDefinitionLoader loader = createBeanDefinitionLoader(getBeanDefinitionRegistry(context), sources);
+		//为类定义加载器添加相关依赖操作实体对象
 		if (this.beanNameGenerator != null) {
 			loader.setBeanNameGenerator(this.beanNameGenerator);
 		}
@@ -1174,6 +1184,11 @@ public class SpringApplication {
 	 * @return the initializers
 	 */
 	public Set<ApplicationContextInitializer<?>> getInitializers() {
+		//当前应用条件下包括SharedMetadataReaderFactoryContextInitializer
+		//DelegatingApplicationContextInitializer
+		//ContextIdApplicationContextInitializer
+		//ServerPortInfoApplicationContextInitializer
+		//对各个class进行排序，按照优先级的顺序排序后存放在LinkHashSet集合中
 		return asUnmodifiableOrderedSet(this.initializers);
 	}
 

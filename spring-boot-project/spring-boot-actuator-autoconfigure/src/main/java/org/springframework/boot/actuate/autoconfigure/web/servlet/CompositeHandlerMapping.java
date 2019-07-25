@@ -46,6 +46,11 @@ class CompositeHandlerMapping implements HandlerMapping {
 		if (this.mappings == null) {
 			this.mappings = extractMappings();
 		}
+		try {
+			throw new RuntimeException("zhuyuqiang");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		for (HandlerMapping mapping : this.mappings) {
 			HandlerExecutionChain handler = mapping.getHandler(request);
 			if (handler != null) {

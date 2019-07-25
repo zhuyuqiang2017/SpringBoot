@@ -165,6 +165,7 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 		Tomcat tomcat = new Tomcat();
 		File baseDir = (this.baseDirectory != null) ? this.baseDirectory : createTempDir("tomcat");
 		tomcat.setBaseDir(baseDir.getAbsolutePath());
+		//zhuyuqiang：初始化连接器以及tomcat引擎
 		Connector connector = new Connector(this.protocol);
 		tomcat.getService().addConnector(connector);
 		customizeConnector(connector);

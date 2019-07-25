@@ -68,6 +68,11 @@ public class WebMvcEndpointManagementContextConfiguration {
 		allEndpoints.addAll(webEndpoints);
 		allEndpoints.addAll(servletEndpointsSupplier.getEndpoints());
 		allEndpoints.addAll(controllerEndpointsSupplier.getEndpoints());
+//		try {
+//			throw new RuntimeException("zhuyuqiang");
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
 		EndpointMapping endpointMapping = new EndpointMapping(webEndpointProperties.getBasePath());
 		return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
 				corsProperties.toCorsConfiguration(),

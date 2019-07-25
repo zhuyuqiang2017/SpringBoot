@@ -193,6 +193,7 @@ public class AnnotationConfigServletWebServerApplicationContext extends ServletW
 	@Override
 	protected void prepareRefresh() {
 		this.scanner.clearCache();
+		//调用prepareRefresh函数，新建用于存储相关信息的集合
 		super.prepareRefresh();
 	}
 

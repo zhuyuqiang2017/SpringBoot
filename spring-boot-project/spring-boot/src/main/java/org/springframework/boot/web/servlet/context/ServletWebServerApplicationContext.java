@@ -149,6 +149,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	protected void onRefresh() {
 		super.onRefresh();
 		try {
+			//zhuyuqiang：创建webserver，在这里因需要初始化好相关的dispatcher对象
 			createWebServer();
 		}
 		catch (Throwable ex) {
