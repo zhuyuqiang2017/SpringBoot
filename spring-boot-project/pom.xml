@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-build</artifactId>
-		<version>${revision}</version>
+		<version>2.1.7.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>spring-boot-project</artifactId>
 	<packaging>pom</packaging>
@@ -30,5 +30,6 @@
 <!--		<module>spring-boot-cli</module>-->
 <!--		<module>spring-boot-docs</module>-->
 		<module>hello-test</module>
+<!--		<module>annotation-test</module>-->
 	</modules>
 </project>

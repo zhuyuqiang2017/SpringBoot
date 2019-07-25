@@ -6,7 +6,7 @@
 		<!-- Your own application should inherit from spring-boot-starter-parent -->
 		<artifactId>spring-boot-samples</artifactId>
 		<groupId>org.springframework.boot</groupId>
-		<version>${revision}</version>
+		<version>2.1.7.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>spring-boot-sample-webservices</artifactId>
 	<name>Spring Boot Web Services Sample</name>
